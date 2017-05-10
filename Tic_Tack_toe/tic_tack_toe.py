@@ -1,3 +1,4 @@
+#written in python 2.7
 board = [[0 for x in range(3)] for y in range(3)]
 playing = True
 moves = 0
@@ -20,6 +21,12 @@ def check_winner():
         else:
             print(player_two + " Wins!")
         return True
+    if board[2][0] == board[1][1] == board [0][2] and board[1][1] != "-":
+        if board[0][0] == "x":
+            print(player_one +" Wins!")
+        else:
+            print(player_two + " Wins!")
+        return True
     for x in range(3):
         if board[0][x] == board[1][x] == board [2][x] and board[1][x] != "-":
             if board[0][x] == "x":
@@ -34,7 +41,7 @@ def check_winner():
                 print(player_two + " Wins!")
             return True
     return False
-    
+
 while playing:
     if moves % 2 == 0:
         print(player_one + "\'s turn")
