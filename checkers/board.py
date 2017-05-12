@@ -1,179 +1,37 @@
 import enums
 from  tkinter import *
+from piece import Piece
 tk = Tk()
 board = [[[0 for x in range(8)]for y in range(8)] for z in range(2)]
 global_x = -1
 global_y = -1
+def compress(x,y):
+    global global_y
+    global global_x
+    board[1][y][x] = board[1][global_y][global_x]
+    board[1][global_y][global_x] = 0
+    create_piece(y,x)
+    board[0][global_y][global_x].delete("all")
 def valid_move(x, y):
     global global_y
     global global_x
-    if(board[1][global_y][global_x] == enums.Type.BLACK_KING):
-        if(abs(y-global_y) == 1 and abs(global_x-x) == 1 and board[1][y][x] == 0):
-            board[1][y][x] = board[1][global_y][global_x]
-            create_king(board[0][y][x], "black")
-            board[0][global_y][global_x].delete("all")
-            return True
-        elif(abs(y-global_y) == 2 and abs(global_x-x) == 2 and board[1][y][x] == 0):
-            if(global_y < y):
-                if((y-global_y) == 1 and abs(global_x-x) == 1 and board[1][y][x] == 0):
-                    board[1][y][x] = board[1][global_y][global_x]
-                    create_king(board[0][y][x], "black")
-                    board[0][global_y][global_x].delete("all")
-                    return True
-                elif((y-global_y) == 2 and abs(global_x-x) == 2):
-                    if(global_x - x == 2): #if its on the left
-                        if(board[1][global_y-1][global_x-1] == enums.Type.RED_PAWN or enums.Type.RED_KING):
-                            board[1][y][x] = board[1][global_y][global_x]
-                            create_king(board[0][y][x], "black")
-                            board[0][global_y][global_x].delete("all")
-                            board[0][global_y+1][global_x-1].delete("all")
-                            board[1][global_y+1][global_x-1] = 0
-                            return True
-                        else:
-                            return False
-                    elif(global_x - x == -2):
-                        if(board[1][global_y-1][global_x+1] == enums.Type.RED_PAWN or enums.Type.RED_KING):
-                            board[1][y][x] = board[1][global_y][global_x]
-                            create_king(board[0][y][x], "black")
-                            board[0][global_y][global_x].delete("all")
-                            board[0][global_y+1][global_x+1].delete("all")
-                            board[1][global_y+1][global_x+1] = 0
-                            return True
-            elif(global_y > y):
-                if((global_y-y) == 1 and abs(global_x-x) == 1 and board[1][y][x] == 0):
-                    board[1][y][x] = board[1][global_y][global_x]
-                    create_king(board[0][y][x], "black")
-                    board[0][global_y][global_x].delete("all")
-                    return True
-                elif((global_y-y) == 2 and abs(global_x-x) == 2):
-                    if(global_x - x == 2): #if its on the left
-                        if(board[1][global_y-1][global_x-1] == enums.Type.RED_PAWN or enums.Type.RED_KING):
-                            board[1][y][x] = board[1][global_y][global_x]
-                            create_king(board[0][y][x], "black")
-                            board[0][global_y][global_x].delete("all")
-                            board[0][global_y-1][global_x-1].delete("all")
-                            board[1][global_y-1][global_x-1] = 0
-                            return True
-                        else:
-                            return False
-                    elif(global_x - x == -2):
-                        if(board[1][global_y-1][global_x+1] == enums.Type.RED_PAWN or enums.Type.RED_KING):
-                            board[1][y][x] = board[1][global_y][global_x]
-                            create_king(board[0][y][x], "red")
-                            board[0][global_y][global_x].delete("all")
-                            board[0][global_y-1][global_x+1].delete("all")
-                            board[1][global_y-1][global_x+1] = 0
-                            return True
-    elif(board[1][global_y][global_x] == enums.Type.RED_KING):
-        if(abs(y-global_y) == 1 and abs(global_x-x) == 1 and board[1][y][x] == 0):
-            board[1][y][x] = board[1][global_y][global_x]
-            create_king(board[0][y][x], "red")
-            board[0][global_y][global_x].delete("all")
-            return True
-        elif(abs(y-global_y) == 2 and abs(global_x-x) == 2 and board[1][y][x] == 0):
-            if(global_y < y):
-                if((y-global_y) == 1 and abs(global_x-x) == 1 and board[1][y][x] == 0):
-                    board[1][y][x] = board[1][global_y][global_x]
-                    create_king(board[0][y][x], "red")
-                    board[0][global_y][global_x].delete("all")
-                    return True
-                elif((y-global_y) == 2 and abs(global_x-x) == 2):
-                    if(global_x - x == 2): #if its on the left
-                        if(board[1][global_y-1][global_x-1] == enums.Type.BLACK_PAWN or enums.Type.BLACK_KING):
-                            board[1][y][x] = board[1][global_y][global_x]
-                            create_king(board[0][y][x], "red")
-                            board[0][global_y][global_x].delete("all")
-                            board[0][global_y+1][global_x-1].delete("all")
-                            board[1][global_y+1][global_x-1] = 0
-                            return True
-                        else:
-                            return False
-                    elif(global_x - x == -2):
-                        if(board[1][global_y-1][global_x+1] == enums.Type.BLACK_PAWN or enums.Type.BLACK_KING):
-                            board[1][y][x] = board[1][global_y][global_x]
-                            create_king(board[0][y][x], "red")
-                            board[0][global_y][global_x].delete("all")
-                            board[0][global_y+1][global_x+1].delete("all")
-                            board[1][global_y+1][global_x+1] = 0
-                            return True
-            elif(global_y > y):
-                if((global_y-y) == 1 and abs(global_x-x) == 1 and board[1][y][x] == 0):
-                    board[1][y][x] = board[1][global_y][global_x]
-                    create_king(board[0][y][x], "red")
-                    board[0][global_y][global_x].delete("all")
-                    return True
-                elif((global_y-y) == 2 and abs(global_x-x) == 2):
-                    if(global_x - x == 2): #if its on the left
-                        if(board[1][global_y-1][global_x-1] == enums.Type.BLACK_PAWN or enums.Type.BLACK_KING):
-                            board[1][y][x] = board[1][global_y][global_x]
-                            create_king(board[0][y][x], "red")
-                            board[0][global_y][global_x].delete("all")
-                            board[0][global_y-1][global_x-1].delete("all")
-                            board[1][global_y-1][global_x-1] = 0
-                            return True
-                        else:
-                            return False
-                    elif(global_x - x == -2):
-                        if(board[1][global_y-1][global_x+1] == enums.Type.BLACK_PAWN or enums.Type.BLACK_KING):
-                            board[1][y][x] = board[1][global_y][global_x]
-                            create_king(board[0][y][x], "red")
-                            board[0][global_y][global_x].delete("all")
-                            board[0][global_y-1][global_x+1].delete("all")
-                            board[1][global_y-1][global_x+1] = 0
-                            return True
+    if(board[1][global_y][global_x].type): #if its a king
+        print("its a king")
+        if(board[1][global_y][global_x].color == "red"):
+            print("its a red piece")
+        else:
+            print("its a black piece")
+    else:
+        if(abs(global_x-x) == 1 and global_y-y == (1 if board[1][global_y][global_x].color == "red" else -1)):
+            compress(x,y)
+        elif(abs(global_x-x) == 2 and global_y-y == (2 if board[1][global_y][global_x].color == "red" else -2)):
+            if(global_x-x == -2): #if its on the right
+                if(board[1][global_y][global_x].color != board[1][global_y +(-1 if board[1][global_y][global_x].color == "red" else 1)][global_x+1].color):
+                    board[0][global_y + (-1 if board[1][global_y][global_x].color == "red" else 1)][global_x+1].delete("all")
+                    board[1][global_y + (-1 if board[1][global_y][global_x].color == "red" else 1)][global_x+1] = 0;
+                    compress(x,y)
+            #else:
 
-    elif(board[1][global_y][global_x] == enums.Type.BLACK_PAWN):
-        if(global_y < y):
-            if((y-global_y) == 1 and abs(global_x-x) == 1 and board[1][y][x] == 0):
-                board[1][y][x] = board[1][global_y][global_x]
-                create_piece(board[0][y][x], "black")
-                board[0][global_y][global_x].delete("all")
-                return True
-            elif((y-global_y) == 2 and abs(global_x-x) == 2):
-                if(global_x - x == 2): #if its on the left
-                    if(board[1][global_y-1][global_x-1] == enums.Type.RED_PAWN or enums.Type.RED_KING):
-                        board[1][y][x] = board[1][global_y][global_x]
-                        create_piece(board[0][y][x], "black")
-                        board[0][global_y][global_x].delete("all")
-                        board[0][global_y+1][global_x-1].delete("all")
-                        board[1][global_y+1][global_x-1] = 0
-                        return True
-                    else:
-                        return False
-                elif(global_x - x == -2):
-                    if(board[1][global_y-1][global_x+1] == enums.Type.RED_PAWN or enums.Type.RED_KING):
-                        board[1][y][x] = board[1][global_y][global_x]
-                        create_piece(board[0][y][x], "black")
-                        board[0][global_y][global_x].delete("all")
-                        board[0][global_y+1][global_x+1].delete("all")
-                        board[1][global_y+1][global_x+1] = 0
-                        return True
-    elif(board[1][global_y][global_x] == enums.Type.RED_PAWN):
-        if(global_y > y):
-            if((global_y-y) == 1 and abs(global_x-x) == 1 and board[1][y][x] == 0):
-                board[1][y][x] = board[1][global_y][global_x]
-                create_piece(board[0][y][x], "red")
-                board[0][global_y][global_x].delete("all")
-                return True
-            elif((global_y-y) == 2 and abs(global_x-x) == 2):
-                if(global_x - x == 2): #if its on the left
-                    if(board[1][global_y-1][global_x-1] == enums.Type.BLACK_PAWN or enums.Type.BLACK_KING):
-                        board[1][y][x] = board[1][global_y][global_x]
-                        create_piece(board[0][y][x], "red")
-                        board[0][global_y][global_x].delete("all")
-                        board[0][global_y-1][global_x-1].delete("all")
-                        board[1][global_y-1][global_x-1] = 0
-                        return True
-                    else:
-                        return False
-                elif(global_x - x == -2):
-                    if(board[1][global_y-1][global_x+1] == enums.Type.BLACK_PAWN or enums.Type.BLACK_KING):
-                        board[1][y][x] = board[1][global_y][global_x]
-                        create_piece(board[0][y][x], "red")
-                        board[0][global_y][global_x].delete("all")
-                        board[0][global_y-1][global_x+1].delete("all")
-                        board[1][global_y-1][global_x+1] = 0
-                        return True
 
 def click(event):
     global global_y
@@ -206,19 +64,15 @@ def click(event):
                     board[1][global_y][global_x] = 0
                 global_x = -1
                 global_y = -1
-def create_king(canvas, color):
-    canvas.create_oval(5, 5, 75, 75, fill="white")
-    canvas.create_oval(7, 7, 73, 73, fill=color)
-    canvas.create_oval(10, 10, 70, 70, fill="white")
-    canvas.create_oval(12, 12, 68, 68, fill=color)
-    canvas.create_oval(17, 17, 63, 63, fill="white")
-    canvas.create_oval(19, 19, 61, 61, fill=color)
-
-def create_piece(canvas, color):
-    canvas.create_oval(5, 5, 75, 75, fill="white")
-    canvas.create_oval(7, 7, 73, 73, fill=color)
-    canvas.create_oval(10, 10, 70, 70, fill="white")
-    canvas.create_oval(12, 12, 68, 68, fill=color)
+def create_piece(r,c):
+    color = board[1][r][c].color
+    board[0][r][c].create_oval(5, 5, 75, 75, fill="white")
+    board[0][r][c].create_oval(7, 7, 73, 73, fill=color)
+    board[0][r][c].create_oval(10, 10, 70, 70, fill="white")
+    board[0][r][c].create_oval(12, 12, 68, 68, fill=color)
+    if(board[1][r][c].type):
+        canvas.create_oval(17, 17, 63, 63, fill="white")
+        canvas.create_oval(19, 19, 61, 61, fill=color)
 
 for r in range(8):
     for c in range(8):
@@ -229,11 +83,11 @@ for r in range(8):
             board[0][r][c] = Canvas(tk, bg="black", height=80, width=80, bd=0, highlightthickness=0, relief='ridge')
             board[0][r][c].grid(row = r,column = c)
             if(r < 3):
-                create_piece(board[0][r][c],"black")
-                board[1][r][c] = enums.Type.BLACK_PAWN
+                board[1][r][c] = Piece(enums.Type.PAWN, enums.Type.BLACK)
+                create_piece(r,c)
             elif(r > 4):
-                create_piece(board[0][r][c],"red")
-                board[1][r][c] = enums.Type.RED_PAWN
+                board[1][r][c] = Piece(enums.Type.PAWN, enums.Type.RED)
+                create_piece(r,c)
 tk.bind("<Button-1>", click)
 tk.resizable(width=False, height=False)
 tk.mainloop()
