@@ -1,4 +1,4 @@
-import enums
+from enums import Type
 from  tkinter import *
 from piece import Piece
 root = Tk()
@@ -87,10 +87,10 @@ for r in range(8):
             board[0][r][c] = Canvas(root, bg="black", height=80, width=80, bd=0, highlightthickness=0, relief='ridge')
             board[0][r][c].grid(row = r,column = c)
             if(r < 3):
-                board[1][r][c] = Piece(enums.Type.PAWN, enums.Type.BLACK)
+                board[1][r][c] = Piece(Type.PAWN, Type.BLACK)
                 create_piece(r,c)
             elif(r > 4):
-                board[1][r][c] = Piece(enums.Type.PAWN, enums.Type.RED)
+                board[1][r][c] = Piece(Type.PAWN, Type.RED)
                 create_piece(r,c)
 root.bind("<Button-1>", click)
 root.resizable(width=False, height=False)
