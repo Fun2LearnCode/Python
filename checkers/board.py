@@ -1,7 +1,7 @@
 import enums
 from  tkinter import *
 from piece import Piece
-root = TK()
+root = Tk()
 board = [[[0 for x in range(8)]for y in range(8)] for z in range(2)]
 global_x = -1
 global_y = -1
