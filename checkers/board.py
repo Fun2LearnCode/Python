@@ -10,6 +10,7 @@ def compress(x,y):
     board[1][global_y][global_x] = 0
     create_piece(y,x)
     board[0][global_y][global_x].delete("all")
+    return True
 def jump_logic(x, y, w,z):
     if(0 < global_y + y and global_y + y < 8 and 0 < global_x + x and global_x + x < 8 and board[1][global_y + y][global_x+x] !=0 and board[1][global_y][global_x].color != board[1][global_y + y][global_x+x].color):
         board[0][global_y + y][global_x+x].delete("all")
