@@ -3,8 +3,12 @@ from  tkinter import *
 from piece import Piece
 root = Tk()
 board = [[[0 for x in range(8)]for y in range(8)] for z in range(2)]
+global global_x
 global_x = -1
+global global_y
 global_y = -1
+global global_turn
+global_turn = 1
 def compress(x,y):
     board[1][y][x] = board[1][global_y][global_x]
     board[1][global_y][global_x] = 0
@@ -44,30 +48,33 @@ def valid_move(x, y):
 def click(event):
     global global_y
     global global_x
+    global global_turn
+    print(global_x, global_y)
     x = int((root.winfo_pointerx() - root.winfo_rootx())/80)
     y = int((root.winfo_pointery() - root.winfo_rooty())/80)
-    if(board[0][y][x]["background"] == "black"):
-        if(global_x == -1 and global_y == -1): #no piece is selected
-            if(board[1][y][x] != 0): #if there is a piece there
-                board[0][y][x]["background"] = "blue"
-                global_x = x
-                global_y = y
+    if((board[1][y][x] != 0) and ((board[1][y][x].color == "red" and global_turn % 2 == 0) or (board[1][y][x].color == "black" and global_turn % 2 == 1))):
+        if(global_x == -1 and global_y == -1):
+            global_x = x
+            global_y = y
+            print("Working")
+            board[0][y][x]["background"] = "blue"
+
         else:
-            if(board[1][y][x] != 0):
-                board[0][global_y][global_x]["background"] = "black"
-                board[0][y][x]["background"] = "blue"
-                global_x = x
-                global_y = y
-            else:
-                board[0][global_y][global_x]["background"] = "black"
-                if(valid_move(x,y)):
-                    if(y == 0 or y== 7 and not board[1][y][x].type):
-                        board[1][y][x].king_me()
-                        board[0][y][x].delete("all")
-                        create_piece(y,x)
-                    board[1][global_y][global_x] = 0
-                global_x = -1
-                global_y = -1
+            print("Working 2")
+            board[0][global_y][global_x]["background"] = "black"
+            board[0][y][x]["background"] = "blue"
+            global_x = x
+            global_y = y
+    elif((board[1][global_y][global_x] != 0) and ((board[1][global_y][global_x].color == "red" and global_turn % 2 == 0) or (board[1][global_y][global_x].color == "black" and global_turn % 2 == 1)) and valid_move(x,y)):
+        global_turn += 1
+        board[0][global_y][global_x]["background"] = "black"
+        if(y == 0 or y== 7 and not board[1][y][x].type):
+            board[1][y][x].king_me()
+            board[0][y][x].delete("all")
+            create_piece(y,x)
+        board[1][global_y][global_x] = 0
+    global_x = -1
+    global_y = -1
 def create_piece(r,c):
     color = board[1][r][c].color
     board[0][r][c].create_oval(5, 5, 75, 75, fill="white")
